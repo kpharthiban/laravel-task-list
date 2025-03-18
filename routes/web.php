@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 // Routings happen here
 
 Route::get('/', function () {
-    return "Main Page";
+    return view("index", [
+        "name" => "Pharthiban" // Passing data
+    ]); // Refers to Blade templates in /resources/views
 });
 
 Route::get("/hello", function () {
