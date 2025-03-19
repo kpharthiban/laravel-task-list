@@ -1,6 +1,7 @@
 <?php
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 class Task
 {
@@ -66,11 +67,19 @@ Route::get('/tasks', function () use ($tasks) {
     ]); // Refers to Blade templates in /resources/views
 })->name("tasks.index");
 
+// Router order MATTERS!!!
+Route::view('/tasks/create', 'create')
+    ->name('tasks.create');
+
 Route::get("/tasks/{id}", function ($id) {
     return view("show", [
         'task' => \App\Models\Task::findOrFail($id) // findOrFail -> makes it easier to run fallback
     ]);
 })->name("tasks.show");
+
+Route::post('/tasks', function (Request $request) {
+    dd($request->all());
+})->name('tasks.store');
 
 // Route::get("/hello", function () {
 //     return "Hello";
