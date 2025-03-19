@@ -1,5 +1,6 @@
 version: "3.9"
 services:
+  # Configuration of MySQL server
   mysql:
     image: mariadb:10.8.3
     # Uncomment below when on Mac M1
