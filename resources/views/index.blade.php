@@ -1,6 +1,6 @@
-<div>
-    Hello, I am a Blade Template!
-</div>
+@extends("layouts.app")
+
+@section("title", "The list of tasks")
 
 {{-- This will be only displayed if the variable is set/passed/exists  --}}
 {{-- @isset($name)
@@ -9,7 +9,7 @@
     </div>
 @endisset --}}
 
-<div>
+@section("content")
     {{-- @if(count($tasks)) --}}
     @forelse ( $tasks as $task )
         <div>
@@ -19,4 +19,4 @@
         <div>There are no tasks!</div>
     @endforelse
     {{-- @endif --}}
-</div>
+@endsection

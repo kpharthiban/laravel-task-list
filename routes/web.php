@@ -1,5 +1,5 @@
 <?php
-
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Route;
 
 class Task
@@ -56,15 +56,24 @@ $tasks = [
 ];
 
 // Routings happen here
+Route::get("/", function () {
+    return redirect()->route("tasks.index");
+});
 
-Route::get('/', function () use ($tasks) {
+Route::get('/tasks', function () use ($tasks) {
     return view("index", [
         "tasks" => $tasks // Passing data
     ]); // Refers to Blade templates in /resources/views
 })->name("tasks.index");
 
-Route::get("/{id}", function ($id) {
-    return "One single task";
+Route::get("/tasks/{id}", function ($id) use ($tasks) {
+    $task = collect($tasks)->firstWhere("id", $id);
+
+    if (!$task) {
+        abort(Response::HTTP_NOT_FOUND);
+    }
+
+    return view("show", ["task" => $task]);
 })->name("tasks.show");
 
 // Route::get("/hello", function () {
