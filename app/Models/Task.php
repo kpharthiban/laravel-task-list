@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['title', 'description', 'long_description']; // This makes sure these value for the keys are fillable
+    // protected $guarded = ['secret'];
 }

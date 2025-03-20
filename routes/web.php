@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Route;
@@ -20,54 +21,31 @@ Route::get('/tasks', function () {
 Route::view('/tasks/create', 'create')
     ->name('tasks.create');
 
-Route::get("/tasks/{id}/edit", function ($id) {
+// Implementing Route Model Binding -> Passing Task as argument -> not necessary to use findOrFail
+Route::get("/tasks/{task}/edit", function (Task $task) {
     return view("edit", [
-        'task' => Task::findOrFail($id) // findOrFail -> makes it easier to run fallback
+        'task' => $task // findOrFail -> makes it easier to run fallback
     ]);
 })->name("tasks.edit");
 
-Route::get("/tasks/{id}", function ($id) {
+Route::get("/tasks/{task}", function (Task $task) {
     return view("show", [
-        'task' => Task::findOrFail($id) // findOrFail -> makes it easier to run fallback
+        'task' => $task // findOrFail -> makes it easier to run fallback
     ]);
 })->name("tasks.show");
 
-Route::post('/tasks', function (Request $request) {
-    // Data validation for user input
-    $data = $request->validate([
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'long_description' => 'required',
-    ]);
+Route::post('/tasks', function (TaskRequest $request) {
+    $task = Task::create($request->validated()); // Is a mass assignment
 
-    // Storing data in db using model
-    $task = new Task;
-    $task->title = $data['title'];
-    $task->description = $data['description'];
-    $task->long_description = $data['long_description'];
-    $task->save(); // Saving the data into db
-
-    return redirect()->route('tasks.show', ['id' => $task->id])
+    return redirect()->route('tasks.show', ['task' => $task->id])
         ->with('success', 'Task created successfully'); // Flash message
 })->name('tasks.store');
 
 // PUT for updating
-Route::put('/tasks/{id}', function ($id, Request $request) {
-    // Data validation for user input
-    $data = $request->validate([
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'long_description' => 'required',
-    ]);
+Route::put('/tasks/{task}', function (Task $task, TaskRequest $request) {
+    $task->update($request->validated()); // This will update the model
 
-    // Storing data in db using model
-    $task = Task::findOrFail($id);
-    $task->title = $data['title'];
-    $task->description = $data['description'];
-    $task->long_description = $data['long_description'];
-    $task->save(); // Saving the data into db
-
-    return redirect()->route('tasks.show', ['id' => $task->id])
+    return redirect()->route('tasks.show', ['task' => $task->id])
         ->with('success', 'Task updated successfully'); // Flash message
 })->name('tasks.update');
 
