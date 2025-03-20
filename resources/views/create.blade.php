@@ -4,6 +4,7 @@
 
 @section("content")
     <form method="POST" action="{{ route('tasks.store') }}">
+        {{ $errors }}
         {{-- Should include this in every form --}}
         {{-- Cross Side Request Forgery >> Disables using script based attacks --}}
         @csrf
