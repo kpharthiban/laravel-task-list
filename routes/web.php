@@ -13,7 +13,7 @@ Route::get("/", function () {
 
 Route::get('/tasks', function () {
     return view("index", [
-        "tasks" => Task::latest()->get() // Executing Query (getting latest entries)
+        "tasks" => Task::latest()->paginate(10) // paginate() - making it into pages // Executing Query (getting latest entries)
     ]); // Refers to Blade templates in /resources/views
 })->name("tasks.index");
 
