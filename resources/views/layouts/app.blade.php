@@ -6,6 +6,19 @@
 <head>
     <title>Laravel 12 Task List App</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    {{-- blade-formatter-disable --}}
+    <style type="text/tailwindcss">
+        .btn {
+            @apply rounded-md px-2 py-1 text-center font-medium text-slate-700 shadow-sm ring-1 ring-slate-700/10 hover:bg-slate-50
+        }
+
+        .link {
+            @apply font-medium text-gray-700 underline decoration-pink-500
+        }
+    </style>
+    {{-- blade-formatter-disable --}}
+
     @yield('styles')
 </head>
 
