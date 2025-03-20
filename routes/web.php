@@ -20,9 +20,15 @@ Route::get('/tasks', function () {
 Route::view('/tasks/create', 'create')
     ->name('tasks.create');
 
+Route::get("/tasks/{id}/edit", function ($id) {
+    return view("edit", [
+        'task' => Task::findOrFail($id) // findOrFail -> makes it easier to run fallback
+    ]);
+})->name("tasks.edit");
+
 Route::get("/tasks/{id}", function ($id) {
     return view("show", [
-        'task' => \App\Models\Task::findOrFail($id) // findOrFail -> makes it easier to run fallback
+        'task' => Task::findOrFail($id) // findOrFail -> makes it easier to run fallback
     ]);
 })->name("tasks.show");
 
@@ -44,6 +50,26 @@ Route::post('/tasks', function (Request $request) {
     return redirect()->route('tasks.show', ['id' => $task->id])
         ->with('success', 'Task created successfully'); // Flash message
 })->name('tasks.store');
+
+// PUT for updating
+Route::put('/tasks/{id}', function ($id, Request $request) {
+    // Data validation for user input
+    $data = $request->validate([
+        'title' => 'required|max:255',
+        'description' => 'required',
+        'long_description' => 'required',
+    ]);
+
+    // Storing data in db using model
+    $task = Task::findOrFail($id);
+    $task->title = $data['title'];
+    $task->description = $data['description'];
+    $task->long_description = $data['long_description'];
+    $task->save(); // Saving the data into db
+
+    return redirect()->route('tasks.show', ['id' => $task->id])
+        ->with('success', 'Task updated successfully'); // Flash message
+})->name('tasks.update');
 
 // Route::get("/hello", function () {
 //     return "Hello";
